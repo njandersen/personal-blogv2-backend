@@ -2,6 +2,7 @@ const { PrismaClient } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
+// Get all posts
 exports.getPosts = async (req, res, next) => {
   const { searchString, skip, take, orderBy } = req.query;
 
@@ -17,8 +18,15 @@ exports.getPosts = async (req, res, next) => {
   res.status(200).json(posts);
 };
 
-exports.getPost = (req, res, next) => {
-  // Need Models
+// Get one post
+exports.getPost = async (req, res, next) => {
+  // const { id } = req.params;
+  const postId = req.params.pid;
+
+  const post = await prisma.post.findUnique({
+    where: { id: Number(postId) },
+  });
+  res.status(200).json(post);
 };
 
 exports.createPost = (req, res, next) => {
