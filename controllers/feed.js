@@ -29,12 +29,15 @@ exports.getPost = async (req, res, next) => {
   res.status(200).json(post);
 };
 
-exports.createPost = (req, res, next) => {
-  const title = req.body.title;
-  const content = req.body.content;
-  // Create post in db
-  res.status(201).json({
-    message: "Post Created Successsfully",
-    post: { id: new Date().toISOString(), title: title, content: content },
+exports.createPost = async (req, res, next) => {
+  const { title, content, published, authorId } = req.body;
+  const result = await prisma.post.create({
+    data: {
+      title,
+      content,
+      published,
+      author: { connect: { id: authorId } },
+    },
   });
+  res.json(result);
 };
